@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding='utf-8'?>
+<surfaces>
+
+  <surface name="polished_teflon_wrapped" type="dielectric_dielectric" sigmaalpha="0.1" finish="groundbackpainted">
+    <propertiestable>	
+      <propertyvector name="SPECULARLOBECONSTANT" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+      <propertyvector name="SPECULARSPIKECONSTANT" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+      <propertyvector name="BACKSCATTERCONSTANT" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+      <propertyvector name="RINDEX" energyunit="eV">
+	<ve energy="1.84" value="1"/>
+	<ve energy="4.08" value="1"/>
+      </propertyvector>
+      <propertyvector name="REFLECTIVITY" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+      <propertyvector name="EFFICIENCY" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+    </propertiestable>  
+  </surface>
+
+  <surface name="rough_teflon_wrapped" type="dielectric_dielectric" sigmaalpha="6.0" finish="groundbackpainted">
+    <propertiestable>	
+      <propertyvector name="SPECULARLOBECONSTANT" energyunit="eV">
+	<ve energy="1.84" value="1"/>
+	<ve energy="4.08" value="1"/>
+      </propertyvector>
+      <propertyvector name="SPECULARSPIKECONSTANT" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+      <propertyvector name="BACKSCATTERCONSTANT" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+      <propertyvector name="RINDEX" energyunit="eV">
+	<ve energy="1.84" value="1"/>
+	<ve energy="4.08" value="1"/>
+      </propertyvector>
+      <propertyvector name="REFLECTIVITY" energyunit="eV">
+	<ve energy="1.84" value="0.95"/>
+	<ve energy="4.08" value="0.95"/>
+      </propertyvector>
+      <propertyvector name="EFFICIENCY" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+    </propertiestable>  
+  </surface>
+
+  <surface name="perfect_apd" type="dielectric_metal" sigmaalpha="0.0" finish="polished">
+    <propertiestable>
+      <propertyvector name="SPECULARLOBECONSTANT" energyunit="eV">
+	<ve energy="1.0" value="1.0"/>
+	<ve energy="2.34" value="1.0"/>
+	<ve energy="4.13" value="1.0"/>
+      </propertyvector>
+      <propertyvector name="SPECULARSPIKECONSTANT" energyunit="eV">	
+	<ve energy="1.0" value="0.0"/>
+	<ve energy="2.34" value="0.0"/>
+        <ve energy="4.13" value="0.0"/>
+      </propertyvector>
+      <propertyvector name="BACKSCATTERCONSTANT" energyunit="eV">
+	<ve energy="1.0" value="0.0"/>
+	<ve energy="2.34" value="0.0"/>
+        <ve energy="4.13" value="0.0"/>
+      </propertyvector>
+      <propertyvector name="REFLECTIVITY" energyunit="eV">                         <!-- CHECK THIS VALUE -->
+	<ve energy="1.0" value="0.0"/>
+	<ve energy="2.34" value="0.0"/>
+        <ve energy="4.13" value="0.0"/>
+      </propertyvector>
+      <propertyvector name="EFFICIENCY" energyunit="eV">			<!-- This vector defines the QUANTUM EFFICIENCY -->
+<ve	energy= "	1.3052631579	" value= "	0	" />
+<ve	energy= "	1.4001624695	" value= "	3.6057692308	" />
+<ve	energy= "	1.4351373855	" value= "	4.6875	" />
+<ve	energy= "	1.476949443	" value= "	6.0096153846	" />
+<ve	energy= "	1.5132572432	" value= "	6.8509615385	" />
+<ve	energy= "	1.5458295964	" value= "	8.1730769231	" />
+<ve	energy= "	1.5798350137	" value= "	9.0144230769	" />
+<ve	energy= "	1.6184037559	" value= "	10.0961538462	" />
+<ve	energy= "	1.6493779904	" value= "	11.4182692308	" />
+<ve	energy= "	1.6493779904	" value= "	11.4182692308	" />
+<ve	energy= "	1.6914622179	" value= "	12.6201923077	" />
+<ve	energy= "	1.7218781219	" value= "	13.8221153846	" />
+<ve	energy= "	1.7534079349	" value= "	15.0240384615	" />
+<ve	energy= "	1.7935483871	" value= "	16.1057692308	" />
+<ve	energy= "	1.820063358	" value= "	17.3076923077	" />
+<ve	energy= "	1.8633513514	" value= "	18.5096153846	" />
+<ve	energy= "	1.9045303867	" value= "	19.9519230769	" />
+<ve	energy= "	1.9475706215	" value= "	21.5144230769	" />
+<ve	energy= "	1.9880046136	" value= "	22.7163461538	" />
+<ve	energy= "	2.0349468713	" value= "	24.2788461538	" />
+<ve	energy= "	2.0791314837	" value= "	25.7211538462	" />
+<ve	energy= "	2.1305315204	" value= "	27.1634615385	" />
+<ve	energy= "	2.1626097867	" value= "	28.4855769231	" />
+<ve	energy= "	2.2125802311	" value= "	29.5673076923	" />
+<ve	energy= "	2.2708827404	" value= "	31.1298076923	" />
+<ve	energy= "	2.3323410014	" value= "	32.5721153846	" />
+<ve	energy= "	2.3773793103	" value= "	33.6538461538	" />
+<ve	energy= "	2.4379066478	" value= "	34.7355769231	" />
+<ve	energy= "	2.5088791849	" value= "	35.9375	" />
+<ve	energy= "	2.5996983409	" value= "	36.5384615385	" />
+<ve	energy= "	2.7315372425	" value= "	36.8990384615	" />
+<ve	energy= "	2.8583747927	" value= "	36.2980769231	" />
+<ve	energy= "	2.9666092943	" value= "	35.5769230769	" />
+<ve	energy= "	3.0833631485	" value= "	34.375	" />
+<ve	energy= "	3.1977736549	" value= "	33.0528846154	" />
+<ve	energy= "	3.2582230624	" value= "	31.3701923077	" />
+<ve	energy= "	3.3467961165	" value= "	29.3269230769	" />
+<ve	energy= "	3.4403193613	" value= "	27.6442307692	" />
+<ve	energy= "	3.5833679834	" value= "	26.3221153846	" />
+<ve	energy= "	3.6750533049	" value= "	24.3990384615	" />
+<ve	energy= "	3.7066666667	" value= "	22.4759615385	" />
+<ve	energy= "	3.7388286334	" value= "	20.5528846154	" />
+<ve	energy= "	3.7715536105	" value= "	18.75	" />
+<ve	energy= "	3.82172949	" value= "	12.9807692308	" />
+<ve	energy= "	3.8559284116	" value= "	9.1346153846	" />
+<ve	energy= "	3.8559284116	" value= "	11.1778846154	" />
+<ve	energy= "	3.890744921	" value= "	7.8125	" />
+<ve	energy= "	3.9365079365	" value= "	0	" />
+    </propertyvector>
+    </propertiestable>
+  </surface>
+
+  <surface name="smooth" type="dielectric_dielectric" sigmaalpha="0.1" finish="polished">
+    <propertiestable>
+      <propertyvector name="SPECULARLOBECONSTANT" energyunit="eV">
+	<ve energy="1.97" value="1"/>
+	<ve energy="2.34" value="1"/>
+      </propertyvector>
+      <propertyvector name="SPECULARSPIKECONSTANT" energyunit="eV">
+	<ve energy="1.97" value="0"/>
+	<ve energy="2.34" value="0"/>
+      </propertyvector>
+      <propertyvector name="BACKSCATTERCONSTANT" energyunit="eV">
+	<ve energy="1.97" value="0"/>
+	<ve energy="2.34" value="0"/>
+      </propertyvector>
+    </propertiestable>
+  </surface>
+  
+  <surface name="rough" type="dielectric_dielectric" sigmaalpha="6.0" finish="ground">
+    <propertiestable>
+      <propertyvector name="SPECULARLOBECONSTANT" energyunit="eV">
+	<ve energy="1.84" value="1"/>
+	<ve energy="4.08" value="1"/>
+      </propertyvector>
+      <propertyvector name="SPECULARSPIKECONSTANT" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+      <propertyvector name="BACKSCATTERCONSTANT" energyunit="eV">
+	<ve energy="1.84" value="0"/>
+	<ve energy="4.08" value="0"/>
+      </propertyvector>
+    </propertiestable>
+  </surface>
+
+  <surface name="black" type="dielectric_metal" sigmaalpha="0.0" finish="ground">
+    <propertiestable>
+      <propertyvector name="SPECULARLOBECONSTANT" energyunit="eV">
+	<ve energy="1.97" value="1"/>
+	<ve energy="2.34" value="1"/>
+      </propertyvector>
+      <propertyvector name="SPECULARSPIKECONSTANT" energyunit="eV">
+	<ve energy="1.97" value="0"/>
+	<ve energy="2.34" value="0"/>
+      </propertyvector>
+      <propertyvector name="BACKSCATTERCONSTANT" energyunit="eV">
+	<ve energy="1.97" value="0"/>
+	<ve energy="2.34" value="0"/>
+      </propertyvector>
+      <propertyvector name="REFLECTIVITY" energyunit="eV">
+	<ve energy="1.97" value="0"/>
+	<ve energy="2.34" value="0"/>
+      </propertyvector>
+      <propertyvector name="EFFICIENCY" energyunit="eV">
+	<ve energy="1.97" value="0"/>
+	<ve energy="2.34" value="0"/>
+      </propertyvector>
+    </propertiestable>
+  </surface>
+
+</surfaces>
