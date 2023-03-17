@@ -112,13 +112,13 @@
 #=================================================================
 
 /gate/actor/addActor EnergySpectrumActor MyActor
-/gate/actor/MyActor/save Al_5keV.root
+/gate/actor/MyActor/save Al_0um.root
 /gate/actor/MyActor/attachTo spec
 /gate/actor/MyActor/addFilter particleFilter
 /gate/actor/MyActor/particleFilter/addParticle gamma
 /gate/actor/MyActor/energySpectrum/setEmin 0 eV
-/gate/actor/MyActor/energySpectrum/setEmax 10 keV
-/gate/actor/MyActor/energySpectrum/setNumberOfBins 500
+/gate/actor/MyActor/energySpectrum/setEmax 60 keV
+/gate/actor/MyActor/energySpectrum/setNumberOfBins 60
 /gate/actor/MyActor/energyLossHisto/setEmin 0 eV
 /gate/actor/MyActor/energyLossHisto/setEmax 15 MeV
 /gate/actor/MyActor/energyLossHisto/setNumberOfBins 120
@@ -176,10 +176,10 @@
 # Position
 /gate/source/twogamma/gps/centre 0.0 0.0 10.0 cm
 # particle
-/gate/source/twogamma/gps/particle e-
+/gate/source/twogamma/gps/particle gamma
 #/gate/source/twogamma/gps/polarization           1 0 0
 /gate/source/twogamma/gps/energytype Mono
-/gate/source/twogamma/gps/monoenergy 5.0 keV
+/gate/source/twogamma/gps/monoenergy 30. keV
 /gate/source/twogamma/setActivity 10000. Bq
 # TYPE= Volume or Surface
 /gate/source/twogamma/gps/type Volume
@@ -255,13 +255,13 @@
 
 #				 ASCII
 /gate/output/ascii/enable
-/gate/output/ascii/setFileName radtests
+/gate/output/ascii/setFileName radtests_alu
 /gate/output/ascii/setOutFileHitsFlag 0
 /gate/output/ascii/setOutFileSinglesFlag 0
 
 #				 ROOT
 /gate/output/root/enable
-/gate/output/root/setFileName radtests
+/gate/output/root/setFileName radtests_alu
 #/gate/output/root/setRootOpticalFlag 1
 
 #=====================================================
@@ -284,7 +284,7 @@
 #/gate/application/setTimeStart 0. s
 #/gate/application/setTimeStop  36. s #8. s
 
-/gate/application/setTotalNumberOfPrimaries 1e7
+/gate/application/setTotalNumberOfPrimaries 1000
 /gate/application/start
 
 #===============================================================
