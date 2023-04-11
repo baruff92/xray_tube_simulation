@@ -6,7 +6,7 @@
 # Content below the first bin: 0
 # Content above the last  bin: 0
 # Content above the last  bin: 0
-# Number of events: 10000000
+# Number of events: 20000000
 2 0
 2e-05 0
 4e-05 0
