@@ -147,6 +147,7 @@
 #=============================================================
 #/control/execute                        ./macro/physicslist_HAD_std.mac
 /gate/physics/addPhysicsList QGSP_BIC_EMY
+# /gate/physics/addPhysicsList empenelope
 # /gate/physics/addPhysicsList LBE
 #/gate/physics/addProcess Scintillation neutron
 #/gate/physics/addProcess Scintillation proton

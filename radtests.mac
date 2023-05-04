@@ -25,7 +25,7 @@
 # /tracking/storeTrajectory 1
 # /vis/filtering/trajectories/create/particleFilter			# visualize only ONE particle
 # /vis/filtering/trajectories/particleFilter-0/add e-			# the said particle
-# /vis/filtering/trajectories/particleFilter-0/invert true		# visualize all BUT the said particle
+# /vis/filtering/trajectories/particleFilter-0/invert 		# visualize all BUT the said particle
 # #/gate/geometry/enable/AutoUpdate
 # /vis/modeling/trajectories/create/drawByParticleID			# define a color for a particle track
 # /vis/modeling/trajectories/drawByParticleID-0/set proton green	# the particle and the color
@@ -73,14 +73,38 @@
 /gate/scannerino/daughters/name spec
 /gate/scannerino/daughters/insert box
 /gate/spec/setMaterial Vacuum
-/gate/spec/geometry/setXLength 20 mm
-/gate/spec/geometry/setYLength 20 mm
+/gate/spec/geometry/setXLength 19 mm
+/gate/spec/geometry/setYLength 19 mm
 /gate/spec/geometry/setZLength 0.1 mm
 /gate/spec/placement/setRotationAxis 1 0 0
 /gate/spec/placement/setRotationAngle 90 deg
 /gate/spec/placement/setTranslation 0.0 -10 5 mm
 /gate/spec/vis/setColor blue
 /gate/spec/vis/forceWireframe
+
+/gate/scannerino/daughters/name Si_det
+/gate/scannerino/daughters/insert box
+/gate/Si_det/setMaterial Silicon
+/gate/Si_det/geometry/setXLength 19 mm
+/gate/Si_det/geometry/setYLength 19 mm
+/gate/Si_det/geometry/setZLength 0.3 mm
+/gate/Si_det/placement/setRotationAxis 1 0 0
+/gate/Si_det/placement/setRotationAngle 90 deg
+/gate/Si_det/placement/setTranslation 0.0 -11 5 mm
+/gate/Si_det/vis/setColor green
+/gate/Si_det/vis/forceSolid
+
+/gate/scannerino/daughters/name part_filter
+/gate/scannerino/daughters/insert box
+/gate/part_filter/setMaterial Vacuum
+/gate/part_filter/geometry/setXLength 22 mm
+/gate/part_filter/geometry/setYLength 22 mm
+/gate/part_filter/geometry/setZLength 0.3 mm
+/gate/part_filter/placement/setRotationAxis 1 0 0
+/gate/part_filter/placement/setRotationAngle 90 deg
+/gate/part_filter/placement/setTranslation 0.0 -9 5 mm
+/gate/part_filter/vis/setColor red
+/gate/part_filter/vis/forceSolid
 
 #		P V T 		P L A N E S
 # /gate/calorimeter_plane_container/daughters/name calorimeter_plane_x
@@ -112,13 +136,19 @@
 #=================================================================
 
 /gate/actor/addActor EnergySpectrumActor MyActor
-/gate/actor/MyActor/save Al_5keV_back.root
+/gate/actor/MyActor/save Al_5keV_penelope.root
 /gate/actor/MyActor/attachTo spec
 /gate/actor/MyActor/addFilter particleFilter
 /gate/actor/MyActor/particleFilter/addParticle gamma
 /gate/actor/MyActor/energySpectrum/setEmin 0 eV
 /gate/actor/MyActor/energySpectrum/setEmax 10 keV
 /gate/actor/MyActor/energySpectrum/setNumberOfBins 500
+
+/gate/actor/addActor KillActor MyActor_1
+/gate/actor/MyActor_1/save killed.txt
+/gate/actor/MyActor_1/attachTo part_filter
+/gate/actor/MyActor_1/addFilter particleFilter
+/gate/actor/MyActor_1/particleFilter/addParticle e-
 
 #============================================================
 #   			A T T A C H
@@ -131,6 +161,7 @@
 # /gate/systems/scanner/level2/attach calorimeter_plane_container
 # /gate/systems/scanner/level3/attach calorimeter_plane_x
 # /gate/systems/scanner/level4/attach anode
+/gate/systems/scanner/level2/attach Si_det
 
 ##/gate/scannerino/attachCrystalSD
 ##/gate/scintill_1/attachCrystalSD
@@ -139,6 +170,7 @@
 #/gate/monolitic_silicon_up/attachCrystalSD
 # /gate/calorimeter_plane_container/attachCrystalSD
 # /gate/calorimeter_plane_x/attachCrystalSD
+/gate/Si_det/attachCrystalSD
 
 #/geometry/test/run
 
@@ -146,7 +178,8 @@
 # 		P H Y S I C S
 #=============================================================
 #/control/execute                        ./macro/physicslist_HAD_std.mac
-/gate/physics/addPhysicsList QGSP_BIC_EMY
+# /gate/physics/addPhysicsList QGSP_BIC_EMY
+/gate/physics/addPhysicsList empenelope
 # /gate/physics/addPhysicsList LBE
 #/gate/physics/addProcess Scintillation neutron
 #/gate/physics/addProcess Scintillation proton
@@ -158,6 +191,7 @@
 /gate/physics/Gamma/SetCutInRegion anode 0.001 mm
 # /gate/physics/process/em/deexcitationIgnoreCut true
 # /gate/physics/SetMaxStepSizeInRegion anode .001 mm
+# /gate/physics/process/em/pixe false
 # /gate/physics/ActivateStepLimiter e-
 
 /gate/run/initialize
@@ -200,10 +234,10 @@
 #/gate/output/fastanalysis/enable
 #/gate/digitizer/Singles/insert opticaladder
 
-#/gate/digitizer/Singles/insert adder
-#/gate/digitizer/Singles/insert readout
+/gate/digitizer/Singles/insert adder
+/gate/digitizer/Singles/insert readout
 #/gate/digitizer/Singles/readout/setPolicy TakeEnergyWinner
-#/gate/digitizer/Singles/readout/setDepth 4
+/gate/digitizer/Singles/readout/setDepth 2
 
 #/gate/digitizer/Singles/insert crystalblurring
 #/gate/digitizer/Singles/crystalblurring/setCrystalResolutionMin 0.15
@@ -245,22 +279,22 @@
 #/gate/digitizer/Singles/noise/setEnergyDistribution energy_distrib
 #
 #				 CALIBRATION
-#/gate/digitizer/Singles/insert calibration
+/gate/digitizer/Singles/insert calibration
 
 # 				 TEMPORAL RESOLUTION
 #/gate/digitizer/Singles/insert timeResolution
 #/gate/digitizer/Singles/timeResolution/setTimeResolution 1000. ns
 
 #				 ASCII
-# /gate/output/ascii/enable
-# /gate/output/ascii/setFileName radtests
-# /gate/output/ascii/setOutFileHitsFlag 0
-# /gate/output/ascii/setOutFileSinglesFlag 0
+/gate/output/ascii/enable
+/gate/output/ascii/setFileName radtests_5kV_empenelope_1umcut
+/gate/output/ascii/setOutFileHitsFlag 1
+/gate/output/ascii/setOutFileSinglesFlag 1
 #
 # #				 ROOT
-# /gate/output/root/enable
-# /gate/output/root/setFileName radtests
-#/gate/output/root/setRootOpticalFlag 1
+/gate/output/root/enable
+/gate/output/root/setFileName radtests_5kV_empenelope_1umcut
+# /gate/output/root/setRootOpticalFlag 1
 
 #=====================================================
 #  		 R A N D O M
@@ -295,5 +329,5 @@
 # /vis/scene/add/trajectories  #smooth
 
 # /gate/application/startDAQ
-# #/vis/viewer/set/autoRefresh true
+# #/vis/viewer/set/autoRefresh
 # /vis/viewer/rebuild
