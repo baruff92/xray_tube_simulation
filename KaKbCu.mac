@@ -12,13 +12,13 @@
 /vis/open OGL
 /vis/viewer/reset
 /vis/viewer/set/viewpointThetaPhi 90 0
-/vis/viewer/zoom 50
+/vis/viewer/zoom 200
 #/vis/viewer/set/style surface
 /vis/viewer/set/edge
 /vis/geometry/set/forceAuxEdgeVisible
 /vis/drawVolume
 # /vis/scene/add/axes
-# /vis/scene/endOfEventAction accumulate
+# /vis/scene/endOfEventAction accumulate  # !vis!
 /vis/viewer/update
 /gate/geometry/setMaterialDatabase GateMaterials.db
 /vis/scene/add/logo2D
@@ -58,27 +58,39 @@
 #	D E T E C T O R S
 #=================================================================
 
-/gate/scannerino/daughters/name anode
+/gate/scannerino/daughters/name filter1
 /gate/scannerino/daughters/insert box
-/gate/anode/setMaterial Tungsten
-/gate/anode/geometry/setXLength 2. cm
-/gate/anode/geometry/setYLength 2. cm
-/gate/anode/geometry/setZLength 2 mm
-/gate/anode/placement/setTranslation 0.0 0.0 0.0 cm
-/gate/anode/placement/setRotationAxis 1 0 0
-/gate/anode/placement/setRotationAngle 45 deg
-/gate/anode/vis/setColor yellow
-/gate/anode/vis/forceWireframe
+/gate/filter1/setMaterial Beryllium
+/gate/filter1/geometry/setXLength 1. cm
+/gate/filter1/geometry/setYLength 1. cm
+/gate/filter1/geometry/setZLength 0.3 mm
+/gate/filter1/placement/setTranslation 0.0 0.0 2.0 mm
+# /gate/filter1/placement/setRotationAxis 1 0 0
+# /gate/filter1/placement/setRotationAngle 45 deg
+/gate/filter1/vis/setColor green
+/gate/filter1/vis/forceWireframe
+
+/gate/scannerino/daughters/name filter2
+/gate/scannerino/daughters/insert box
+/gate/filter2/setMaterial Zirconium
+/gate/filter2/geometry/setXLength 1. cm
+/gate/filter2/geometry/setYLength 1. cm
+/gate/filter2/geometry/setZLength 0.1 mm
+/gate/filter2/placement/setTranslation 0.0 0.0 0.0 cm
+# /gate/filter2/placement/setRotationAxis 1 0 0
+# /gate/filter2/placement/setRotationAngle 45 deg
+/gate/filter2/vis/setColor yellow
+/gate/filter2/vis/forceWireframe
 
 /gate/scannerino/daughters/name spec
 /gate/scannerino/daughters/insert box
 /gate/spec/setMaterial Vacuum
-/gate/spec/geometry/setXLength 20 mm
-/gate/spec/geometry/setYLength 20 mm
-/gate/spec/geometry/setZLength 0.1 mm
-/gate/spec/placement/setRotationAxis 1 0 0
-/gate/spec/placement/setRotationAngle 90 deg
-/gate/spec/placement/setTranslation 0.0 -10 5 mm
+/gate/spec/geometry/setXLength 4 mm
+/gate/spec/geometry/setYLength 4 mm
+/gate/spec/geometry/setZLength .1 mm
+# /gate/spec/placement/setRotationAxis 1 0 0
+# /gate/spec/placement/setRotationAngle 45 deg
+/gate/spec/placement/setTranslation 0.0 0.0 -1.5 mm
 /gate/spec/vis/setColor blue
 /gate/spec/vis/forceWireframe
 
@@ -112,13 +124,16 @@
 #=================================================================
 
 /gate/actor/addActor EnergySpectrumActor MyActor
-/gate/actor/MyActor/save W_50keV_back.root
+/gate/actor/MyActor/save Zr_abs.root
 /gate/actor/MyActor/attachTo spec
 /gate/actor/MyActor/addFilter particleFilter
 /gate/actor/MyActor/particleFilter/addParticle gamma
 /gate/actor/MyActor/energySpectrum/setEmin 0 eV
-/gate/actor/MyActor/energySpectrum/setEmax 100 keV
-/gate/actor/MyActor/energySpectrum/setNumberOfBins 500
+/gate/actor/MyActor/energySpectrum/setEmax 60 keV
+/gate/actor/MyActor/energySpectrum/setNumberOfBins 600
+/gate/actor/MyActor/energyLossHisto/setEdepMin 0 eV
+/gate/actor/MyActor/energyLossHisto/setEdepMax 15 MeV
+/gate/actor/MyActor/energyLossHisto/setNumberOfEdepBins 120
 
 #============================================================
 #   			A T T A C H
@@ -130,11 +145,11 @@
 #/gate/systems/scanner/level2/attach monolitic_silicon_up
 # /gate/systems/scanner/level2/attach calorimeter_plane_container
 # /gate/systems/scanner/level3/attach calorimeter_plane_x
-# /gate/systems/scanner/level4/attach anode
+# /gate/systems/scanner/level4/attach filter2
 
 ##/gate/scannerino/attachCrystalSD
 ##/gate/scintill_1/attachCrystalSD
-# /gate/anode/attachCrystalSD
+# /gate/filter2/attachCrystalSD
 #/gate/monolitic_silicon_down/attachCrystalSD
 #/gate/monolitic_silicon_up/attachCrystalSD
 # /gate/calorimeter_plane_container/attachCrystalSD
@@ -146,8 +161,7 @@
 # 		P H Y S I C S
 #=============================================================
 #/control/execute                        ./macro/physicslist_HAD_std.mac
-/gate/physics/addPhysicsList QGSP_BIC_EMY
-# /gate/physics/addPhysicsList empenelope
+/gate/physics/addPhysicsList QGSP_BIC_EMZ
 # /gate/physics/addPhysicsList LBE
 #/gate/physics/addProcess Scintillation neutron
 #/gate/physics/addProcess Scintillation proton
@@ -155,44 +169,47 @@
 #/gate/physics/removeProcess RadioactiveDecay
 # /gate/physics/addProcess Bremsstrahlung e-
 # /gate/physics/processes/Bremsstrahlung/setModel PenelopeModel e-
-# /gate/physics/processes/Bremsstrahlung/activateSplitting e- 100
-/gate/physics/Gamma/SetCutInRegion anode 0.001 mm
-# /gate/physics/process/em/deexcitationIgnoreCut true
-# /gate/physics/SetMaxStepSizeInRegion anode .001 mm
+# /gate/physics/Gamma/SetCutInRegion filter2 0.0001 mm
+# /gate/physics/SetMaxStepSizeInRegion filter2 .001 mm
 # /gate/physics/ActivateStepLimiter e-
+
+/process/em/fluoANSTO true
 
 /gate/run/initialize
 /gate/physics/displayCuts
-
 
 #========================================================
 #	S O U R C E
 #========================================================
 
-/gate/source/addSource twogamma gps
+/gate/source/addSource interpolationSpectrum gps
 #/gate/source/twogamma/setActivity 5. becquerel
 #/gate/source/twogamma/setType PencilBeam
 # Position
-/gate/source/twogamma/gps/centre 0.0 0.0 10.0 cm
+/gate/source/interpolationSpectrum/gps/centre 0.0 0.0 10.0 cm
 # particle
-/gate/source/twogamma/gps/particle e-
+/gate/source/interpolationSpectrum/gps/particle gamma
+# /gate/source/interpolationSpectrum/gps/ene/type Gauss
+# /gate/source/interpolationSpectrum/gps/energy 8979 eV
+# /gate/source/minterpolationSpectrumono/gps/ene/sigma 100 eV
 #/gate/source/twogamma/gps/polarization           1 0 0
-/gate/source/twogamma/gps/energytype Mono
-/gate/source/twogamma/gps/monoenergy 50.0 keV
-/gate/source/twogamma/setActivity 1000. Bq
+/gate/source/interpolationSpectrum/gps/energytype UserSpectrum
+#/gate/source/interpolationSpectrum/gps/setSpectrumFile InterpolationSpectrum_flat.txt
+/gate/source/interpolationSpectrum/gps/setSpectrumFile spectrum/W_60kV/interpspectrum_W_60kV.dat
+/gate/source/interpolationSpectrum/setActivity 10000. Bq
 # TYPE= Volume or Surface
-/gate/source/twogamma/gps/type Volume
+/gate/source/interpolationSpectrum/gps/type Volume
 # SHAPE= examples Sphere or Cylinder
-/gate/source/twogamma/gps/shape Cylinder
-/gate/source/twogamma/gps/radius 0.   cm
-/gate/source/twogamma/gps/halfz 0. cm
+/gate/source/interpolationSpectrum/gps/shape Cylinder
+/gate/source/interpolationSpectrum/gps/radius 0.   cm
+/gate/source/interpolationSpectrum/gps/halfz 0. cm
 # Set the angular distribution of emission
-/gate/source/twogamma/gps/angtype iso
+/gate/source/interpolationSpectrum/gps/angtype iso
 
-/gate/source/twogamma/gps/mintheta 0. deg
-/gate/source/twogamma/gps/maxtheta 0. deg
-/gate/source/twogamma/gps/minphi 0. deg
-/gate/source/twogamma/gps/maxphi 0. deg
+/gate/source/interpolationSpectrum/gps/mintheta 0. deg
+/gate/source/interpolationSpectrum/gps/maxtheta 0. deg
+/gate/source/interpolationSpectrum/gps/minphi 0. deg
+/gate/source/interpolationSpectrum/gps/maxphi 0. deg
 
 #===================================================================
 #       		O U T P U T ( O P T I C A L )
@@ -201,10 +218,10 @@
 #/gate/output/fastanalysis/enable
 #/gate/digitizer/Singles/insert opticaladder
 
-#/gate/digitizer/Singles/insert adder
-#/gate/digitizer/Singles/insert readout
+# /gate/digitizer/Singles/insert adder
+# /gate/digitizer/Singles/insert readout
 #/gate/digitizer/Singles/readout/setPolicy TakeEnergyWinner
-#/gate/digitizer/Singles/readout/setDepth 4
+# /gate/digitizer/Singles/readout/setDepth 4
 
 #/gate/digitizer/Singles/insert crystalblurring
 #/gate/digitizer/Singles/crystalblurring/setCrystalResolutionMin 0.15
@@ -246,21 +263,21 @@
 #/gate/digitizer/Singles/noise/setEnergyDistribution energy_distrib
 #
 #				 CALIBRATION
-#/gate/digitizer/Singles/insert calibration
+# /gate/digitizer/Singles/insert calibration
 
 # 				 TEMPORAL RESOLUTION
 #/gate/digitizer/Singles/insert timeResolution
 #/gate/digitizer/Singles/timeResolution/setTimeResolution 1000. ns
 
 #				 ASCII
-# /gate/output/ascii/enable
-# /gate/output/ascii/setFileName radtests
-# /gate/output/ascii/setOutFileHitsFlag 0
-# /gate/output/ascii/setOutFileSinglesFlag 0
-#
-# #				 ROOT
+/gate/output/ascii/enable
+/gate/output/ascii/setFileName radtests_alu
+/gate/output/ascii/setOutFileHitsFlag 0
+/gate/output/ascii/setOutFileSinglesFlag 0
+
+#				 ROOT
 # /gate/output/root/enable
-# /gate/output/root/setFileName radtests
+# /gate/output/root/setFileName radtests_alu
 #/gate/output/root/setRootOpticalFlag 1
 
 #=====================================================
@@ -279,22 +296,21 @@
 #=================================================================
 
 
-# /gate/application/setTimeSlice 1.0 s
-# /gate/application/setTimeStart 0. s
-# /gate/application/setTimeStop  2.0 s #8. s
+#/gate/application/setTimeSlice 1.0 s
+#/gate/application/setTimeStart 0. s
+#/gate/application/setTimeStop  36. s #8. s
 
-/gate/application/setTotalNumberOfPrimaries 1e7 # 4e7
+/gate/application/setTotalNumberOfPrimaries 1e5
 /gate/application/start
 
 #===============================================================
 # 		S T A R T
 #===============================================================
-# /gate/output/allowNoOutput
+# #/gate/output/allowNoOutput
 # #/gate/source/twogamma/visualize 5000 red 2
 # /vis/ogl/set/displayListLimit 1000000
-# /vis/scene/endOfEventAction accumulate 1000
-# /vis/scene/add/trajectories  #smooth
-
-# /gate/application/startDAQ
+# /vis/scene/endOfEventAction accumulate 1000 # !vis!
+# /vis/scene/add/trajectories  #smooth # !vis!
+# # /gate/application/startDAQ
 # #/vis/viewer/set/autoRefresh true
-# /vis/viewer/rebuild
+# /vis/viewer/rebuild # !vis!

@@ -32,7 +32,8 @@ Zinc:       S= Zn  ; Z= 30. ; A=  65.39  g/mole
 Gallium:    S= Ga  ; Z= 31. ; A=  69.723 g/mole
 Germanium:  S= Ge  ; Z= 32. ; A=  72.61  g/mole
 Yttrium:    S= Y   ; Z= 39. ; A=  88.91  g/mole
-Molybdenum: S= Mo  ; Z= 42  ; A= 95.95 g/mole
+Zirconium:  S= Zr  ; Z= 40. ; A=  91.22  g/mole
+Molybdenum: S= Mo  ; Z= 42. ; A= 95.95 g/mole
 Silver:     S= Ag  ; Z= 47. ; A= 107.868 g/mole
 Cadmium:    S= Cd  ; Z= 48. ; A= 112.41  g/mole
 Tin:        S= Sn  ; Z= 50. ; A= 118.71  g/mole
@@ -61,6 +62,9 @@ Vacuum: d=0.000001 mg/cm3 ; n=1
 Aluminium: d=2.7 g/cm3 ; n=1 ; state=solid
         +el: name=auto       ; n=1
 
+Copper: d= 8.96 g/cm3 ; n=1 ; state=solid
+        +el: name=auto       ; n=1
+
 AluminiumEGS: d=2.702 g/cm3 ; n=1 ; state=solid
         +el: name=Aluminium  ; n=1
 
@@ -70,7 +74,13 @@ Uranium: d=18.90 g/cm3 ; n=1 ; state=solid
 Silicon: d=2.33 g/cm3 ; n=1 ; state=solid
         +el: name=auto       ; n=1
 
+Nickel: d=8.908g/cm3 ; n=1 ; state=solid
+        +el: name=auto       ; n=1        
+
 Germanium: d=5.32 g/cm3 ; n=1 ; state=solid
+        +el: name=auto       ; n=1
+
+Zirconium: d=6.52 g/cm3 ; n=1 ; state=solid
         +el: name=auto       ; n=1
 
 Yttrium: d=4.47 g/cm3 ; n=1
