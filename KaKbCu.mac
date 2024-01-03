@@ -195,7 +195,7 @@
 #/gate/source/twogamma/gps/polarization           1 0 0
 /gate/source/interpolationSpectrum/gps/energytype UserSpectrum
 #/gate/source/interpolationSpectrum/gps/setSpectrumFile InterpolationSpectrum_flat.txt
-/gate/source/interpolationSpectrum/gps/setSpectrumFile spectrum/W_60kV/interpspectrum_W_60kV.dat
+/gate/source/interpolationSpectrum/gps/setSpectrumFile spectrum/W_50kV/interpspectrum_W_50kV.dat
 /gate/source/interpolationSpectrum/setActivity 10000. Bq
 # TYPE= Volume or Surface
 /gate/source/interpolationSpectrum/gps/type Volume
