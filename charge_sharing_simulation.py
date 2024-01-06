@@ -5,7 +5,6 @@ from scipy.integrate import quad
 from scipy import optimize
 from scipy import special
 from datetime import datetime
-plt.rcParams['text.usetex'] = True
 
 def charge_sharing():
     print('Now we study charge-sharing')
@@ -96,9 +95,9 @@ def Cu_Fluo():
     fig1, sub1 = plt.subplots()
     fig2, sub2 = plt.subplots()
 
-    pp = 75 #micron
+    pp = 25 #micron
     array_s = 5
-    nop = 50
+    nop = 400
     ev_mult = 10
     Pgridx = np.random.uniform(0.*pp,(array_s-0.)*pp, size=nop) # np.arange(-0.25*pp,+1.25*pp,0.1*pp)
     Pgridy = np.random.uniform(0.*pp,(array_s-0.)*pp, size=nop) #np.arange(-0.25*pp,+1.25*pp,0.1*pp)
@@ -112,8 +111,8 @@ def Cu_Fluo():
     X, Y = np.meshgrid(Evgridx, Evgridy)
 
     sigma = 7.5 # micron
-    thre_disp = 50 # eV
-    intr_nois = 90*3.6 # eV
+    thre_disp = 0 # eV
+    intr_nois = 31*3.6 # eV
     sigmaeV = np.sqrt(np.power(intr_nois,2) + np.power(thre_disp,2)) # eV
     print('Energy resolution:', sigmaeV, 'eV')
     print('Intrinsic noise:', intr_nois, 'eV')
@@ -294,20 +293,22 @@ def Cu_Fluo():
     print('X1:', parama[0]+parama[4])
     print('CS:', parama[3])
 
-    sub2.plot(ba[1:], gauss_box(ba[1:],parama[0],parama[1],parama[2],parama[3],parama[4],parama[5]),'--',label='Fit')
-    sub2.plot(ba[1:], gauss1d(ba[1:],parama[0],parama[1],parama[2]),':', label='$K_\alpha$')
-    sub2.plot(ba[1:], gauss1d(ba[1:],parama[0]+parama[4],parama[1],parama[5]),':', label='$K_\beta$')
-    sub2.plot(ba[1:], box(ba[1:],parama[0],parama[1],parama[3]),':', label='$K_\beta$')
+    #sub2.plot(ba[1:], gauss_box(ba[1:],parama[0],parama[1],parama[2],parama[3],parama[4],parama[5]),'-',label='Fit')
+    #sub2.plot(ba[1:], gauss1d(ba[1:],parama[0],parama[1],parama[2]),'--', label='K_a')
+    #sub2.plot(ba[1:], gauss1d(ba[1:],parama[0]+parama[4],parama[1],parama[5]),'--', label='K_b')
+    #sub2.plot(ba[1:], box(ba[1:],parama[0],parama[1],parama[3]),'--', label='Charge sharing')
 
-    nc,bc,pc = sub3.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='clusters')
+    nc,bc,pc = sub2.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='Clusters')
     paramc, covc = optimize.curve_fit(gauss_box,bc[xmin+1:],nc[xmin:],
                          p0=[8046,sigmaeV,nop,10,1000,nop/5],
                          bounds=[[0,0,0,0,500,0],[9000,1e3,1e6,1e6,1500,1e6]])
     #print(paramc)
-    #sub2.plot(bc[1:], gauss_box(bc[1:],paramc[0],paramc[1],paramc[2],paramc[3],paramc[4],paramc[5]),'--')
+    sub2.plot(bc[1:], gauss_box(bc[1:],paramc[0],paramc[1],paramc[2],paramc[3],paramc[4],paramc[5]),'-', label='Fit')
     sub2.plot([thr0,thr0],[0,np.max(nc)],':')
     sub2.plot([thr1,thr1],[0,np.max(nc)],':')
 
+    sub2.set_xlim([-100,12000])
+    sub2.set_ylim([-2,110])
     sub2.legend()
     fig1.show()
     fig2.show()
