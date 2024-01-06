@@ -5,6 +5,7 @@ from scipy.integrate import quad
 from scipy import optimize
 from scipy import special
 from datetime import datetime
+plt.rcParams['text.usetex'] = True
 
 def charge_sharing():
     print('Now we study charge-sharing')
@@ -80,6 +81,9 @@ def gauss1d(x,x0,sigma,A):
 def box(x,x0,sigmac,Ac):
     return Ac*special.erfc((x-x0)/(sigmac*np.sqrt(2)))
 
+def box2side(x,x0,sigmac,Ac,x1,sigma1,mu):
+    return Ac*special.erfc((x-x0)/(sigmac*np.sqrt(2)))*special.erfc((x1-x)/(sigma1*np.sqrt(2)))*np.exp(-x*mu) 
+
 def gauss_box(x,x0,sigma,A,Ac,x1,Ab):
     return gauss1d(x,x0,sigma,A)+ box(x,x0,sigma,Ac) + gauss1d(x,x0+x1,sigma,Ab)
 
@@ -94,7 +98,7 @@ def Cu_Fluo():
 
     pp = 75 #micron
     array_s = 5
-    nop = 1000
+    nop = 50
     ev_mult = 10
     Pgridx = np.random.uniform(0.*pp,(array_s-0.)*pp, size=nop) # np.arange(-0.25*pp,+1.25*pp,0.1*pp)
     Pgridy = np.random.uniform(0.*pp,(array_s-0.)*pp, size=nop) #np.arange(-0.25*pp,+1.25*pp,0.1*pp)
@@ -108,8 +112,12 @@ def Cu_Fluo():
     X, Y = np.meshgrid(Evgridx, Evgridy)
 
     sigma = 7.5 # micron
-    sigmaeV = np.sqrt(np.power(45*3.6,2) + np.power(50,2)) # eV
+    thre_disp = 50 # eV
+    intr_nois = 90*3.6 # eV
+    sigmaeV = np.sqrt(np.power(intr_nois,2) + np.power(thre_disp,2)) # eV
     print('Energy resolution:', sigmaeV, 'eV')
+    print('Intrinsic noise:', intr_nois, 'eV')
+    print('Threshold disperion:', thre_disp, 'eV')
     energy = np.array([8046 if np.random.uniform(0,1) > 0.12 else 8904 for i in range(nop)]) #Cu fluo 
     #energy = [6405 if np.random.uniform(0,1) > 0.12 else 7059 for i in range(nop)] #Fe fluo 
     charges = [[] for i in range(array_s*array_s)]
@@ -121,7 +129,7 @@ def Cu_Fluo():
     print('Kb:',num_kb)
 
     thr0 = 7999.4/2
-    thr1 = 8000
+    thr1 = 8500
     count0 = 0
     count1 = 0
     print('thr0:',thr0,'- thr2:',thr1)
@@ -171,7 +179,7 @@ def Cu_Fluo():
                     if e == 8904:    
                         x_kb_as_ka.append(x0%pp)
                         y_kb_as_ka.append(y0%pp)
-                if ev > thr1: 
+                elif ev > thr1: 
                     count1+=1
                     if e == 8904:
                         x_kb_corr.append(x0%pp)
@@ -227,7 +235,8 @@ def Cu_Fluo():
     bins = 20
     fig4, sub4 = plt.subplots() #ka_corr
     H, xedges, yedges = np.histogram2d(x_ka_corr, y_ka_corr, bins=(bins, bins), range=[[0,pp],[0,pp]])
-    Hn, xedgesn, yedgesn = np.histogram2d(Pgridx%pp, Pgridy%pp, bins=(bins, bins), range=[[0,pp],[0,pp]])
+    Hn, xedgesn, yedgesn = np.histogram2d([x%pp for x,e in zip(Pgridx,energy) if e==8046],
+                                            [y%pp for y,e in zip(Pgridy,energy) if e==8046], bins=(bins, bins), range=[[0,pp],[0,pp]])
     ka_corr_norm = np.zeros_like(H)
     for ix in range(np.shape(H)[0]):
         for iy in range(np.shape(H)[1]):
@@ -250,7 +259,7 @@ def Cu_Fluo():
         # sub2.plot(b[1:], gauss1d(b[1:],param[0],param[1],param[2]),':')
         # sub2.plot(b[1:], box(b[1:],param[0],param[1],param[3]),':')
 
-    na,ba,pa = sub2.hist(np.array(charges).flatten(), bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='average')
+    na,ba,pa = sub2.hist(np.array(charges).flatten(), bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='Spectrum')
     scurve = [np.sum(na[i:]) for i in range(len(na))]
     sub3.plot(ba[1:],scurve)
 
@@ -276,7 +285,6 @@ def Cu_Fluo():
             
     # print('Charges:', np.shape(charges))
     # print('Cluster:', np.shape(cluster))
-    nc,bc,pc = sub2.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='clusters')
 
     parama, cova = optimize.curve_fit(gauss_box,ba[xmin+1:],na[xmin:],
                         p0=[8046,sigmaeV,nop,10,1000,nop/5],
@@ -286,13 +294,17 @@ def Cu_Fluo():
     print('X1:', parama[0]+parama[4])
     print('CS:', parama[3])
 
-    sub2.plot(ba[1:], gauss_box(ba[1:],parama[0],parama[1],parama[2],parama[3],parama[4],parama[5]),'-')
+    sub2.plot(ba[1:], gauss_box(ba[1:],parama[0],parama[1],parama[2],parama[3],parama[4],parama[5]),'--',label='Fit')
+    sub2.plot(ba[1:], gauss1d(ba[1:],parama[0],parama[1],parama[2]),':', label='$K_\alpha$')
+    sub2.plot(ba[1:], gauss1d(ba[1:],parama[0]+parama[4],parama[1],parama[5]),':', label='$K_\beta$')
+    sub2.plot(ba[1:], box(ba[1:],parama[0],parama[1],parama[3]),':', label='$K_\beta$')
 
+    nc,bc,pc = sub3.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='clusters')
     paramc, covc = optimize.curve_fit(gauss_box,bc[xmin+1:],nc[xmin:],
-                        p0=[8046,sigmaeV,nop,10,1000,nop/5],
-                        bounds=[[0,0,0,0,500,0],[9000,1e3,1e6,1e6,1500,1e6]])
-    # print(paramc)
-    sub2.plot(bc[1:], gauss_box(bc[1:],paramc[0],paramc[1],paramc[2],paramc[3],paramc[4],paramc[5]),'-')
+                         p0=[8046,sigmaeV,nop,10,1000,nop/5],
+                         bounds=[[0,0,0,0,500,0],[9000,1e3,1e6,1e6,1500,1e6]])
+    #print(paramc)
+    #sub2.plot(bc[1:], gauss_box(bc[1:],paramc[0],paramc[1],paramc[2],paramc[3],paramc[4],paramc[5]),'--')
     sub2.plot([thr0,thr0],[0,np.max(nc)],':')
     sub2.plot([thr1,thr1],[0,np.max(nc)],':')
 
@@ -301,7 +313,6 @@ def Cu_Fluo():
     fig2.show()
 
     fig5, sub5 = plt.subplots() #kb_corr
-
     sub5.scatter(x_kb_corr,y_kb_corr,alpha=0.1, marker='.', color='blue', label='Kb correct')
     sub5.scatter(x_kb_corr,pp-np.array(y_kb_corr),alpha=0.1, marker='.', color='blue')
     sub5.scatter(pp-np.array(x_kb_corr),pp-np.array(y_kb_corr),alpha=0.1, marker='.', color='blue')
@@ -320,10 +331,21 @@ def Cu_Fluo():
         lh.set_alpha(1)
     fig5.show()
 
-    fig6, sub6 = plt.subplots() #kb_as_ka
+    fig6, sub6 = plt.subplots() #ka_corr
+    sub6.scatter(x_ka_corr,y_ka_corr,alpha=0.1, marker='.', color='blue', label='Ka correct')
+    sub6.scatter(x_ka_corr,pp-np.array(y_ka_corr),alpha=0.1, marker='.', color='blue')
+    sub6.scatter(pp-np.array(x_ka_corr),pp-np.array(y_ka_corr),alpha=0.1, marker='.', color='blue')
+    sub6.scatter(pp-np.array(x_ka_corr),np.array(y_ka_corr),alpha=0.1, marker='.', color='blue')
+    sub6.plot([0,pp,pp,0,0],[0,0,pp,pp,0],'-')
     sub6.set_xlabel('x(um)')
     sub6.set_ylabel('y(um)')
-    # fig6.show()
+    sub6.set_xlim([-0.1*pp,1.1*pp])
+    sub6.set_ylim([-0.1*pp,1.1*pp])
+    leg = sub6.legend()
+    for lh in leg.legendHandles: 
+        lh.set_alpha(1)
+    fig6.show()
+
 
 def use_modulus():
     fig5, sub5 = plt.subplots() #kb_corr
@@ -341,3 +363,51 @@ def use_modulus():
     print(result)
     print(result1)
     fig5.show()
+
+def make_plot_lgads():
+    print('We make a nice plot')
+
+    fig2, sub2 = plt.subplots()
+    sub2.cla()
+    sub2.set_xlabel('Energy (eV)')
+    sub2.set_ylabel('Counts (Arb. un.)')
+
+    x = np.arange(-200,3000,1)
+    x_e = 2000 
+    A_e = 1500
+    x_h = x_e/3
+    A_h = 1500
+    sigma_e = 60
+    sigma_h = sigma_e/1.2
+    ch_sh = 0.5
+    mu = 0.0008
+
+    electron_generated = gauss1d(x,x_e,sigma_e,A_e) + box(x,x_e,sigma_e,ch_sh) + gauss1d(x,0,sigma_e,A_e*20)
+    hole_generated = gauss1d(x,x_h,sigma_h,A_h) + box(x,x_h,sigma_h,ch_sh+0.1) + gauss1d(x,0,sigma_e,A_e*20)
+    part_mult = box2side(x,x_e,sigma_e,ch_sh*4,x_h,sigma_h,mu)
+    tot = electron_generated+part_mult+hole_generated
+    sub2.plot(x, electron_generated, '--', label='Electron-generated')
+    sub2.plot(x, hole_generated, '--', label='Hole-generated')
+    sub2.plot(x, part_mult, '--', label='Partial multiplication')
+    sub2.plot(x, tot, '-', label='Total')
+    sub2.set_xlim([-50,2500])
+    sub2.set_ylim([-1,20])    
+    sub2.legend()
+    fig2.show()
+
+    fig3, sub3 = plt.subplots()
+    sub3.cla()
+    sub3.set_xlabel('Energy (eV)')
+    sub3.set_ylabel('Counts (Arb. un.)')
+    SCelectron_generated = [np.sum(electron_generated[i:]) for i in range(len(electron_generated))] 
+    SChole_generated = [np.sum(hole_generated[i:]) for i in range(len(hole_generated))] 
+    SCpart_mult = [np.sum(part_mult[i:]) for i in range(len(part_mult))] 
+    SCtot = [np.sum(tot[i:]) for i in range(len(tot))] 
+    sub3.plot(x, SCelectron_generated, '--', label='Electron-generated')
+    sub3.plot(x, SChole_generated, '--', label='Hole-generated')
+    sub3.plot(x, SCpart_mult, '--', label='Partial multiplication')
+    sub3.plot(x, SCtot, '-', label='Total')
+    sub3.set_xlim([-50,2500])
+    sub3.set_ylim([-500,10000])    
+    sub3.legend()
+    fig3.show()
