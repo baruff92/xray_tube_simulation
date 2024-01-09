@@ -60,7 +60,7 @@
 
 /gate/scannerino/daughters/name anode
 /gate/scannerino/daughters/insert box
-/gate/anode/setMaterial Tungsten
+/gate/anode/setMaterial Copper
 /gate/anode/geometry/setXLength 2. cm
 /gate/anode/geometry/setYLength 2. cm
 /gate/anode/geometry/setZLength 2 mm
@@ -112,13 +112,13 @@
 #=================================================================
 
 /gate/actor/addActor EnergySpectrumActor MyActor
-/gate/actor/MyActor/save W_50keV_back.root
+/gate/actor/MyActor/save Cu_60keV_back.root
 /gate/actor/MyActor/attachTo spec
 /gate/actor/MyActor/addFilter particleFilter
 /gate/actor/MyActor/particleFilter/addParticle gamma
 /gate/actor/MyActor/energySpectrum/setEmin 0 eV
-/gate/actor/MyActor/energySpectrum/setEmax 100 keV
-/gate/actor/MyActor/energySpectrum/setNumberOfBins 500
+/gate/actor/MyActor/energySpectrum/setEmax 30 keV
+/gate/actor/MyActor/energySpectrum/setNumberOfBins 200
 
 #============================================================
 #   			A T T A C H
@@ -178,7 +178,7 @@
 /gate/source/twogamma/gps/particle e-
 #/gate/source/twogamma/gps/polarization           1 0 0
 /gate/source/twogamma/gps/energytype Mono
-/gate/source/twogamma/gps/monoenergy 50.0 keV
+/gate/source/twogamma/gps/monoenergy 60.0 keV
 /gate/source/twogamma/setActivity 1000. Bq
 # TYPE= Volume or Surface
 /gate/source/twogamma/gps/type Volume
@@ -283,7 +283,7 @@
 # /gate/application/setTimeStart 0. s
 # /gate/application/setTimeStop  2.0 s #8. s
 
-/gate/application/setTotalNumberOfPrimaries 1e7 # 4e7
+/gate/application/setTotalNumberOfPrimaries 1e7
 /gate/application/start
 
 #===============================================================

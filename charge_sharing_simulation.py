@@ -90,14 +90,19 @@ def scurve_func(th, flex, noise, amplitude, chargesharing):
     y=0.5*amplitude*(1+special.erf((flex-th)/(noise*np.sqrt(2))))*(1+chargesharing*(flex-th)/noise)
     return y
 
-def Cu_Fluo():
+def Cu_Fluo_f():
+    p = [100,150,175]
+    for pp in p:
+        Cu_Fluo(pp)
+
+def Cu_Fluo(pp = 150):
     print('Now we study charge-sharing')
     fig1, sub1 = plt.subplots()
     fig2, sub2 = plt.subplots()
 
-    pp = 25 #micron
+    print('Pixel pitch:', pp, 'um')
     array_s = 5
-    nop = 400
+    nop = 1000
     ev_mult = 10
     Pgridx = np.random.uniform(0.*pp,(array_s-0.)*pp, size=nop) # np.arange(-0.25*pp,+1.25*pp,0.1*pp)
     Pgridy = np.random.uniform(0.*pp,(array_s-0.)*pp, size=nop) #np.arange(-0.25*pp,+1.25*pp,0.1*pp)
@@ -111,8 +116,8 @@ def Cu_Fluo():
     X, Y = np.meshgrid(Evgridx, Evgridy)
 
     sigma = 7.5 # micron
-    thre_disp = 0 # eV
-    intr_nois = 31*3.6 # eV
+    thre_disp = 50 # eV
+    intr_nois = 50*3.6 # eV
     sigmaeV = np.sqrt(np.power(intr_nois,2) + np.power(thre_disp,2)) # eV
     print('Energy resolution:', sigmaeV, 'eV')
     print('Intrinsic noise:', intr_nois, 'eV')
