@@ -70,3 +70,53 @@ void plot_alu_spectra()
   // spectr->Draw("sames");
 
 }
+
+void plot_Cu_Ni_spectra()
+{
+  gStyle->SetOptStat(0);
+  std::cout << "Plotting the spectra" << std::endl;
+  TCanvas *c4 = new TCanvas("c4","c4");
+  auto legend = new TLegend(0.1,0.7,0.48,0.9);
+
+  std::vector<std::string> root_files = {
+                                        "Cu_No_abs.root",
+                                        "Cu_Ni_abs.root"
+                                        };
+
+  std::vector<std::string> labels = {
+                                     "Cu fluorescence",
+                                     "Cu + 5um Ni"
+                                        };
+  int i=0;
+  std::vector<int> colors = {1,2,3,4,6};
+  std::vector<double> thickness;
+  std::vector<double> intensity;
+  for (auto f : root_files)
+  {
+    std::cout << f << std::endl;
+    TFile *fileSp = new TFile(f.c_str());
+    TH1D *spectr = new TH1D();
+    spectr = (TH1D*)fileSp->Get("energySpectrumFluenceTrack");
+    std::cout << "  Entries:" << spectr->GetEntries() << std::endl;
+    spectr->SetTitle("");
+    spectr->GetXaxis()->Set(spectr->GetNbinsX(), 0, 30);
+    spectr->GetXaxis()->SetTitle("Energy (keV)");
+    spectr->SetLineColor(colors[i]);
+    spectr->Draw("hist Sames");
+    legend->AddEntry(spectr, labels[i].c_str(), "f");
+
+    i++;
+  }
+  legend->Draw();
+
+  // TFile *fileSp = new TFile("Al_0um.root");
+  // TH1D *spectr = new TH1D();
+  // spectr = (TH1D*)fileSp->Get("energySpectrumFluenceTrack");
+  //
+  // TCanvas *c5 = new TCanvas("c5","c5");
+  // spectr->Draw();
+
+  // spectr->Draw("sames");
+
+}
+

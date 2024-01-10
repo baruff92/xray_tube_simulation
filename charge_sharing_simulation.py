@@ -92,16 +92,18 @@ def scurve_func(th, flex, noise, amplitude, chargesharing):
 
 def Cu_Fluo_f():
     p = [100,150,175]
-    for pp in p:
-        Cu_Fluo(pp)
+    n = [20, 30, 45, 60, 70, 90]
 
-def Cu_Fluo(pp = 150):
+    for nn in n:
+        Cu_Fluo(intr_nois=nn*3.6)
+
+def Cu_Fluo(pp = 150, intr_nois = 50*3.6):
     print('Now we study charge-sharing')
     fig1, sub1 = plt.subplots()
     fig2, sub2 = plt.subplots()
 
     print('Pixel pitch:', pp, 'um')
-    array_s = 5
+    array_s = 6
     nop = 1000
     ev_mult = 10
     Pgridx = np.random.uniform(0.*pp,(array_s-0.)*pp, size=nop) # np.arange(-0.25*pp,+1.25*pp,0.1*pp)
@@ -117,7 +119,7 @@ def Cu_Fluo(pp = 150):
 
     sigma = 7.5 # micron
     thre_disp = 50 # eV
-    intr_nois = 50*3.6 # eV
+    
     sigmaeV = np.sqrt(np.power(intr_nois,2) + np.power(thre_disp,2)) # eV
     print('Energy resolution:', sigmaeV, 'eV')
     print('Intrinsic noise:', intr_nois, 'eV')
@@ -416,4 +418,44 @@ def make_plot_lgads():
     sub3.set_xlim([-50,2500])
     sub3.set_ylim([-500,10000])    
     sub3.legend()
+    fig3.show()
+
+def plot_trends():
+    fig1, sub1 = plt.subplots()
+    sub1.set_xlabel('Threshold1 (eV)')
+    sub1.set_ylabel('Fraction')
+    threshold= np.loadtxt('threshold.txt')
+    columns = ['Count0','corr_counts','corr_ka', 'corr_kb', 'kb_as_ka',	'ka_as_kb']
+    skip = [5,4,0]
+    for i,t in enumerate(columns):
+        if i in skip: continue 
+        sub1.plot(threshold[:,0], threshold[:,i+1], label=t, marker='o')
+    sub1.legend()
+    sub1.grid()
+    fig1.show()
+
+    fig2, sub2 = plt.subplots()
+    sub2.set_xlabel('Noise (e-)')
+    sub2.set_ylabel('Fraction')
+    noise= np.loadtxt('noise.txt')
+    columns = ['Count0','corr_counts','corr_ka', 'corr_kb', 'kb_as_ka',	'ka_as_kb']
+    skip = [5,4,0]
+    for i,t in enumerate(columns):
+        if i in skip: continue 
+        sub2.plot(noise[:,0], noise[:,i+1], label=t, marker='o')
+    sub2.legend()
+    sub2.grid()
+    fig2.show()
+
+    fig3, sub3 = plt.subplots()
+    sub3.set_xlabel('pitch (um)')
+    sub3.set_ylabel('Fraction')
+    pitch= np.loadtxt('pitch.txt')
+    columns = ['Count0','corr_counts','corr_ka', 'corr_kb', 'kb_as_ka',	'ka_as_kb']
+    skip = [5,4,0]
+    for i,t in enumerate(columns):
+        if i in skip: continue 
+        sub3.plot(pitch[:,0], pitch[:,i+1], label=t, marker='o')
+    sub3.legend()
+    sub3.grid()
     fig3.show()
