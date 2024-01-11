@@ -124,7 +124,8 @@ def Cu_Fluo(pp = 150, intr_nois = 50*3.6):
     print('Energy resolution:', sigmaeV, 'eV')
     print('Intrinsic noise:', intr_nois, 'eV')
     print('Threshold disperion:', thre_disp, 'eV')
-    energy = np.array([8046 if np.random.uniform(0,1) > 0.12 else 8904 for i in range(nop)]) #Cu fluo 
+    #energy = np.array([8046 if np.random.uniform(0,1) > 0.12 else 8904 for i in range(nop)]) #Cu fluo 
+    energy = np.array([8046 if np.random.uniform(0,1) > 0.05 else 8904 for i in range(nop)]) #Cu ka
     #energy = [6405 if np.random.uniform(0,1) > 0.12 else 7059 for i in range(nop)] #Fe fluo 
     charges = [[] for i in range(array_s*array_s)]
     cluster = []
@@ -305,7 +306,7 @@ def Cu_Fluo(pp = 150, intr_nois = 50*3.6):
     sub2.plot(ba[1:], gauss1d(ba[1:],parama[0]+parama[4],parama[1],parama[5]),'--', label='K_b')
     sub2.plot(ba[1:], box(ba[1:],parama[0],parama[1],parama[3]),'--', label='Charge sharing')
 
-    nc,bc,pc = sub3.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='Clusters')
+    nc,bc,pc = sub2.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='Clusters')
     paramc, covc = optimize.curve_fit(gauss_box,bc[xmin+1:],nc[xmin:],
                          p0=[8046,sigmaeV,nop,10,1000,nop/5],
                          bounds=[[0,0,0,0,500,0],[9000,1e3,1e6,1e6,1500,1e6]])
