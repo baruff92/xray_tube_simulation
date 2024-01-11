@@ -92,7 +92,7 @@ def scurve_func(th, flex, noise, amplitude, chargesharing):
 
 def Cu_Fluo_f():
     p = [100,150,175]
-    n = [20,30,90]
+    n = [45]
 
     for nn in n:
         Cu_Fluo(intr_nois=nn*3.6)
@@ -459,6 +459,20 @@ def plot_trends():
     sub3.legend()
     sub3.grid()
     fig3.show()
+
+
+    fig4, sub4 = plt.subplots()
+    sub4.set_xlabel('Noise (e-)')
+    sub4.set_ylabel('Fraction')
+    noise_150um= np.loadtxt('noise_150um.txt')
+    columns = ['Count0','corr_counts','corr_ka', 'corr_kb', 'kb_as_ka',	'ka_as_kb']
+    skip = [5,4,0]
+    for i,t in enumerate(columns):
+        if i in skip: continue 
+        sub4.plot(noise_150um[:,0], noise_150um[:,i+1], label=t, marker='o')
+    sub4.legend()
+    sub4.grid()
+    fig4.show()
 
 def plots_Ni():
     fig1, sub1 = plt.subplots()
