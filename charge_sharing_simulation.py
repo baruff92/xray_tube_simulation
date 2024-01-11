@@ -92,7 +92,7 @@ def scurve_func(th, flex, noise, amplitude, chargesharing):
 
 def Cu_Fluo_f():
     p = [100,150,175]
-    n = [20, 30, 45, 60, 70, 90]
+    n = [45,50,60]
 
     for nn in n:
         Cu_Fluo(intr_nois=nn*3.6)
