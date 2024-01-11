@@ -92,7 +92,7 @@ def scurve_func(th, flex, noise, amplitude, chargesharing):
 
 def Cu_Fluo_f():
     p = [100,150,175]
-    n = [45,50,60]
+    n = [20,30,90]
 
     for nn in n:
         Cu_Fluo(intr_nois=nn*3.6)
@@ -300,17 +300,17 @@ def Cu_Fluo(pp = 150, intr_nois = 50*3.6):
     print('X1:', parama[0]+parama[4])
     print('CS:', parama[3])
 
-    #sub2.plot(ba[1:], gauss_box(ba[1:],parama[0],parama[1],parama[2],parama[3],parama[4],parama[5]),'-',label='Fit')
-    #sub2.plot(ba[1:], gauss1d(ba[1:],parama[0],parama[1],parama[2]),'--', label='K_a')
-    #sub2.plot(ba[1:], gauss1d(ba[1:],parama[0]+parama[4],parama[1],parama[5]),'--', label='K_b')
-    #sub2.plot(ba[1:], box(ba[1:],parama[0],parama[1],parama[3]),'--', label='Charge sharing')
+    sub2.plot(ba[1:], gauss_box(ba[1:],parama[0],parama[1],parama[2],parama[3],parama[4],parama[5]),'-',label='Fit')
+    sub2.plot(ba[1:], gauss1d(ba[1:],parama[0],parama[1],parama[2]),'--', label='K_a')
+    sub2.plot(ba[1:], gauss1d(ba[1:],parama[0]+parama[4],parama[1],parama[5]),'--', label='K_b')
+    sub2.plot(ba[1:], box(ba[1:],parama[0],parama[1],parama[3]),'--', label='Charge sharing')
 
-    nc,bc,pc = sub2.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='Clusters')
+    nc,bc,pc = sub3.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='Clusters')
     paramc, covc = optimize.curve_fit(gauss_box,bc[xmin+1:],nc[xmin:],
                          p0=[8046,sigmaeV,nop,10,1000,nop/5],
                          bounds=[[0,0,0,0,500,0],[9000,1e3,1e6,1e6,1500,1e6]])
     #print(paramc)
-    sub2.plot(bc[1:], gauss_box(bc[1:],paramc[0],paramc[1],paramc[2],paramc[3],paramc[4],paramc[5]),'-', label='Fit')
+    #sub2.plot(bc[1:], gauss_box(bc[1:],paramc[0],paramc[1],paramc[2],paramc[3],paramc[4],paramc[5]),'-', label='Fit')
     sub2.plot([thr0,thr0],[0,np.max(nc)],':')
     sub2.plot([thr1,thr1],[0,np.max(nc)],':')
 
@@ -459,3 +459,29 @@ def plot_trends():
     sub3.legend()
     sub3.grid()
     fig3.show()
+
+def plots_Ni():
+    fig1, sub1 = plt.subplots()
+    sub1.set_xlabel('Energy (eV)')
+    sub1.set_ylabel('Absorption coefficient (1/cm)')
+    Ni_abs= np.loadtxt('Ni_abs_coeff.txt')
+    sub1.plot(Ni_abs[:,0], Ni_abs[:,2], label='Ni absorption coefficient', marker='.')
+    sub1.plot([8046,8046],[0,1e5], '--', label='K_a')
+    sub1.plot([8904,8904],[0,1e5], '--', label='K_b')
+    sub1.legend()
+    sub1.set_yscale('log')
+    sub1.set_xlim([1000,15000])
+    sub1.grid()
+    fig1.show()   
+
+    fig2, sub2 = plt.subplots()
+    sub2.set_xlabel('Ni filter thickness (um)')
+    sub2.set_ylabel('Relavive intensity')
+    Ni_abs_ka_kb= np.loadtxt('Ni_abs_ka_kb.txt')
+    sub2.plot(Ni_abs_ka_kb[:,0], Ni_abs_ka_kb[:,1], label='K_a', marker='.')
+    sub2.plot(Ni_abs_ka_kb[:,0], Ni_abs_ka_kb[:,2], label='K_b', marker='.')
+    sub2.legend()
+#    sub2.set_yscale('log')
+#    sub2.set_xlim([1000,15000])
+    sub2.grid()
+    fig2.show()   
