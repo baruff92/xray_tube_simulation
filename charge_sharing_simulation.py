@@ -103,7 +103,7 @@ def Cu_Fluo(pp = 150, intr_nois = 50*3.6):
     fig2, sub2 = plt.subplots()
 
     print('Pixel pitch:', pp, 'um')
-    array_s = 6
+    array_s = 4
     nop = 1000
     ev_mult = 10
     Pgridx = np.random.uniform(0.*pp,(array_s-0.)*pp, size=nop) # np.arange(-0.25*pp,+1.25*pp,0.1*pp)
@@ -124,8 +124,8 @@ def Cu_Fluo(pp = 150, intr_nois = 50*3.6):
     print('Energy resolution:', sigmaeV, 'eV')
     print('Intrinsic noise:', intr_nois, 'eV')
     print('Threshold disperion:', thre_disp, 'eV')
-    #energy = np.array([8046 if np.random.uniform(0,1) > 0.12 else 8904 for i in range(nop)]) #Cu fluo 
-    energy = np.array([8046 if np.random.uniform(0,1) > 0.05 else 8904 for i in range(nop)]) #Cu ka
+    energy = np.array([8046 if np.random.uniform(0,1) > 0.12 else 8904 for i in range(nop)]) #Cu fluo 
+    #energy = np.array([8046 if np.random.uniform(0,1) > 0.05 else 8904 for i in range(nop)]) #Cu ka
     #energy = [6405 if np.random.uniform(0,1) > 0.12 else 7059 for i in range(nop)] #Fe fluo 
     charges = [[] for i in range(array_s*array_s)]
     cluster = []
@@ -283,13 +283,21 @@ def Cu_Fluo(pp = 150, intr_nois = 50*3.6):
 
     #cluster = np.sum(charges,axis=0)
     cluster = []
-    for i in range(array_s-1):
-        for j in range(array_s-1):
-            indexes = [[i,j],[i+1,j],[i,j+1],[i+1,j+1]]
-            lin_indexes = [ int(x*array_s+y) for x,y in indexes] 
-            # print(i,j,indexes, lin_indexes)
-            cluster.extend( np.sum([charges[jj] for jj in lin_indexes], axis=0)) 
-            
+    # for i in range(array_s-1):
+    #     for j in range(array_s-1):
+    #         indexes = [[i,j],[i+1,j],[i,j+1],[i+1,j+1]]
+    #         lin_indexes = [ int(x*array_s+y) for x,y in indexes] 
+    #         # print(i,j,indexes, lin_indexes)
+    #         cluster.extend( np.sum([charges[jj] for jj in lin_indexes], axis=0)) 
+
+    charges_v = np.array(charges)
+    for j in range(nop*ev_mult):
+        # print(charges_v[:,j])
+        # print(np.sort(charges_v[:,j]))
+        # print(np.sort(charges_v[:,j])[-4:])
+        # print(np.sum(np.sort(charges_v[:,j])[-4:]))
+        cluster.append(np.sum(np.sort(charges_v[:,j])[-4:]))
+
     # print('Charges:', np.shape(charges))
     # print('Cluster:', np.shape(cluster))
 
@@ -301,17 +309,19 @@ def Cu_Fluo(pp = 150, intr_nois = 50*3.6):
     print('X1:', parama[0]+parama[4])
     print('CS:', parama[3])
 
-    sub2.plot(ba[1:], gauss_box(ba[1:],parama[0],parama[1],parama[2],parama[3],parama[4],parama[5]),'-',label='Fit')
-    sub2.plot(ba[1:], gauss1d(ba[1:],parama[0],parama[1],parama[2]),'--', label='K_a')
-    sub2.plot(ba[1:], gauss1d(ba[1:],parama[0]+parama[4],parama[1],parama[5]),'--', label='K_b')
-    sub2.plot(ba[1:], box(ba[1:],parama[0],parama[1],parama[3]),'--', label='Charge sharing')
+    # sub2.plot(ba[1:], gauss_box(ba[1:],parama[0],parama[1],parama[2],parama[3],parama[4],parama[5]),'-',label='Fit')
+    # sub2.plot(ba[1:], gauss1d(ba[1:],parama[0],parama[1],parama[2]),'--', label='K_a')
+    # sub2.plot(ba[1:], gauss1d(ba[1:],parama[0]+parama[4],parama[1],parama[5]),'--', label='K_b')
+    # sub2.plot(ba[1:], box(ba[1:],parama[0],parama[1],parama[3]),'--', label='Charge sharing')
 
     nc,bc,pc = sub2.hist(cluster, bins=400, range=(0*np.min(energy),1.5*np.max(energy)),histtype='step', label='Clusters')
     paramc, covc = optimize.curve_fit(gauss_box,bc[xmin+1:],nc[xmin:],
                          p0=[8046,sigmaeV,nop,10,1000,nop/5],
                          bounds=[[0,0,0,0,500,0],[9000,1e3,1e6,1e6,1500,1e6]])
     #print(paramc)
-    #sub2.plot(bc[1:], gauss_box(bc[1:],paramc[0],paramc[1],paramc[2],paramc[3],paramc[4],paramc[5]),'-', label='Fit')
+    sub2.plot(bc[1:], gauss_box(bc[1:],paramc[0],paramc[1],paramc[2],paramc[3],paramc[4],paramc[5]),'-', label='Fit')
+    sub2.plot(bc[1:], gauss1d(bc[1:],paramc[0],paramc[1],paramc[2]),'--', label='K_a')
+    sub2.plot(bc[1:], gauss1d(bc[1:],paramc[0]+paramc[4],paramc[1],paramc[5]),'--', label='K_b')
     sub2.plot([thr0,thr0],[0,np.max(nc)],':')
     sub2.plot([thr1,thr1],[0,np.max(nc)],':')
 
